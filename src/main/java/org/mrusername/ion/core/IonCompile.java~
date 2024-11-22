@@ -1,6 +1,0 @@
-package org.mrusername.ion.core;
-
-import org.gradle.api.tasks.compile.JavaCompile;
-
-public class IonCompile extends JavaCompile {
-}
