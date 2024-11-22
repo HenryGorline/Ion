@@ -1,0 +1,23 @@
+package org.mrusername.ion.core.lang;
+
+import org.mrusername.ion.core.lang.transform.Transform;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class IonTransformer {
+    private final List<Transform> transforms;
+    public IonTransformer() {
+        this.transforms = new ArrayList<>();
+    }
+
+    public void addTransform(Transform transform) {
+        this.transforms.add(transform);
+    }
+    public String applyTransforms(String string){
+        for (Transform transformer : transforms) {
+            string = transformer.apply(string);
+        }
+        return string;
+    }
+}

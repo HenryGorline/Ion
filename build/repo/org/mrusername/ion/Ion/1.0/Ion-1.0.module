@@ -1,0 +1,78 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.mrusername.ion",
+    "module": "Ion",
+    "version": "1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.antlr",
+          "module": "antlr4",
+          "version": {
+            "requires": "4.13.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "Ion-1.0.jar",
+          "url": "Ion-1.0.jar",
+          "size": 36331,
+          "sha512": "9d0234f15a7472b5ba50190b8994184ef84225c9c0592ed984246d1f0267e588ef4036855f1adbfc973f1b4f9e9f284f937ed4aea3119e2b1991ad144db837dd",
+          "sha256": "e1494b7529ffa812dc3643b0fde11736fb7a65d4c8fd3980714d89a0b545f8b5",
+          "sha1": "3e5b411e99160f926e520ed031a11a034780da22",
+          "md5": "77185bdfe0fab81b70ac91cd41cb948e"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.antlr",
+          "module": "antlr4",
+          "version": {
+            "requires": "4.13.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "Ion-1.0.jar",
+          "url": "Ion-1.0.jar",
+          "size": 36331,
+          "sha512": "9d0234f15a7472b5ba50190b8994184ef84225c9c0592ed984246d1f0267e588ef4036855f1adbfc973f1b4f9e9f284f937ed4aea3119e2b1991ad144db837dd",
+          "sha256": "e1494b7529ffa812dc3643b0fde11736fb7a65d4c8fd3980714d89a0b545f8b5",
+          "sha1": "3e5b411e99160f926e520ed031a11a034780da22",
+          "md5": "77185bdfe0fab81b70ac91cd41cb948e"
+        }
+      ]
+    }
+  ]
+}

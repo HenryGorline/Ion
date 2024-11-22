@@ -1,0 +1,8 @@
+pluginManagement {
+    repositories {
+        mavenLocal()  // Add mavenLocal to look for plugins locally
+        mavenCentral()  // You can also add Maven Central or other repositories here
+    }
+}
+rootProject.name = 'Ion'
+

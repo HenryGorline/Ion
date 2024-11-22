@@ -1,0 +1,66 @@
+package org.mrusername.ion.core;
+
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
+import org.gradle.api.file.FileTree;
+import org.gradle.api.tasks.compile.JavaCompile;
+import org.mrusername.ion.core.transform.Transform;
+
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+public class IonPlugin implements Plugin<Project> {
+    List<Transform> transformList = List.of();
+    @Override
+    public void apply(Project project) {
+        project.getTasks().register("transformSources", task -> task.doLast(action -> {
+            File sourceDir = project.file("src/main/java");
+            File transformedSourcesDir = project.file(project.getBuildDir() + "/transformations");
+            if (transformedSourcesDir.exists()) {
+                transformedSourcesDir.delete();
+            }
+            transformedSourcesDir.mkdirs();
+            try {
+                Files.walk(sourceDir.toPath())
+                        .filter(path -> path.toString().endsWith(".java"))
+                        .forEach(path -> {
+                            try {
+                                String sourceCode = Files.readString(path);
+                                for (Transform transform : transformList) {
+                                    sourceCode = transform.apply(sourceCode);
+                                }
+                                Path relativePath = sourceDir.toPath().relativize(path);
+                                Path targetPath = transformedSourcesDir.toPath().resolve(relativePath);
+                                Files.createDirectories(targetPath.getParent());
+                                Files.writeString(targetPath, sourceCode);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Failed to transform file: " + path, e);
+                            }
+                        });
+            } catch (Exception e) {
+                throw new RuntimeException("Error during source transformation", e);
+            }
+        }));
+        project.getTasks().withType(JavaCompile.class).configureEach(javaCompile -> {
+            javaCompile.dependsOn("transformSources");
+            javaCompile.doFirst(task -> {
+                File transformedSourcesDir = project.file(project.getBuildDir() + "/transformations");
+                FileTree transformedSources = project.fileTree(transformedSourcesDir);
+                javaCompile.setSource(transformedSources);
+            });
+            javaCompile.getOptions().setFork(true); // Fork a new JVM to avoid blocking the build
+            javaCompile.doLast(task -> {
+                DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+                if (!diagnostics.getDiagnostics().isEmpty()) {
+                    diagnostics.getDiagnostics().forEach(diagnostic -> {
+                        System.err.println("Warning: " + diagnostic.getMessage(null));
+                    });
+                }
+            });
+        });
+    }
+}

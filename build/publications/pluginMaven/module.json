@@ -1,0 +1,104 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.mrusername.ion",
+    "module": "Ion",
+    "version": "1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "antlr",
+          "module": "antlr",
+          "version": {
+            "requires": "2.7.7"
+          },
+          "excludes": [
+            {
+              "group": "*",
+              "module": "*"
+            }
+          ],
+          "thirdPartyCompatibility": {
+            "artifactSelector": {
+              "name": "antlr",
+              "type": "jar",
+              "extension": "jar"
+            }
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "Ion-1.0.jar",
+          "url": "Ion-1.0.jar",
+          "size": 20670,
+          "sha512": "7b7c6ab1487d23f855b7c8ff71fcf2451d16ad1bb682bfedf6e0d2144a0f2eb5bc858aee66bfa776f4fb7908b2951cdd53702bb60cd95deaf8f28e9e109aa92a",
+          "sha256": "80d8518b6cce382f1b1d00b571be4c6ff3037c90872024e46f6aa488e10fcd1b",
+          "sha1": "5edd3e39f4dea8ed0d5b26cb408c817743114906",
+          "md5": "5d76ab6ef92bbacef715fcc7520472df"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "antlr",
+          "module": "antlr",
+          "version": {
+            "requires": "2.7.7"
+          },
+          "excludes": [
+            {
+              "group": "*",
+              "module": "*"
+            }
+          ],
+          "thirdPartyCompatibility": {
+            "artifactSelector": {
+              "name": "antlr",
+              "type": "jar",
+              "extension": "jar"
+            }
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "Ion-1.0.jar",
+          "url": "Ion-1.0.jar",
+          "size": 20670,
+          "sha512": "7b7c6ab1487d23f855b7c8ff71fcf2451d16ad1bb682bfedf6e0d2144a0f2eb5bc858aee66bfa776f4fb7908b2951cdd53702bb60cd95deaf8f28e9e109aa92a",
+          "sha256": "80d8518b6cce382f1b1d00b571be4c6ff3037c90872024e46f6aa488e10fcd1b",
+          "sha1": "5edd3e39f4dea8ed0d5b26cb408c817743114906",
+          "md5": "5d76ab6ef92bbacef715fcc7520472df"
+        }
+      ]
+    }
+  ]
+}

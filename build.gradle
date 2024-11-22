@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+    id 'antlr'
+}
+
+group = 'org.mrusername.ion'
+version = '1.0'
+
+gradlePlugin {
+    plugins {
+        create("IonPlugin") {
+            id = "ion"
+            implementationClass = "org.mrusername.ion.Ion"
+        }
+    }
+}
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'ion'
+            version = '1.0'
+        }
+    }
+    repositories {
+        mavenLocal()  // Publish to the local Maven repository
+    }
+}
+jar {
+    from sourceSets.main.output
+    archiveBaseName.set("ion")
+    archiveVersion.set("1.0")
+}
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from("src/main/resources") {
+        include("META-INF/services/javax.annotation.processing.Processor")
+    }
+}

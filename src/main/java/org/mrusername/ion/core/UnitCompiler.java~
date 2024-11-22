@@ -1,0 +1,72 @@
+package org.mrusername.ion.core;
+
+import org.mrusername.ion.core.node.ClassNode;
+import org.mrusername.ion.core.node.FieldNode;
+import org.mrusername.ion.core.node.util.AccessModifier;
+
+import javax.tools.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UnitCompiler implements IonCompiler {
+    public final JavaCompiler compiler;
+    public final IonJavaFileManager fileManager;
+    public final IonClassLoader classLoader;
+    public final List<IonJavaFileObject> units ;
+    public UnitCompiler(JavaCompiler compiler, IonJavaFileManager fileManager, IonClassLoader classLoader, List<IonJavaFileObject> units) {
+        this.compiler = compiler;
+        this.fileManager = fileManager;
+        this.classLoader = classLoader;
+        this.units = units;
+    }
+    public UnitCompiler(IonJavaFileManager fileManager, IonClassLoader classLoader, List<IonJavaFileObject> units) {
+        this.compiler = ToolProvider.getSystemJavaCompiler();
+        this.fileManager = fileManager;
+        this.classLoader = classLoader;
+        this.units = units;
+    }
+    public UnitCompiler(){
+        this.compiler = ToolProvider.getSystemJavaCompiler();
+        this.fileManager = new IonJavaFileManager(compiler.getStandardFileManager(null, null, null));
+        this.classLoader = new IonClassLoader(fileManager.getClassBytes());
+        this.units = new ArrayList<>();
+    }
+    private void  addIonFileObject(String name, String sourceCode) {
+        units.add(new IonJavaFileObject(name, sourceCode));
+    }
+    @Override
+    public <T> Class<T> toClass(String packageName, String sourceCode) {
+        addIonFileObject(packageName, sourceCode);
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, null, null, units);
+        if (!task.call()) {
+            for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+                System.err.println("Error on line " + diagnostic.getLineNumber() + ": " + diagnostic.getMessage(null));
+            }
+            throw new IllegalArgumentException("Could not compile the class: " + packageName);
+        }
+        fileManager.getClassBytes().forEach(classLoader::addClass);
+        try {
+            return (Class<T>) classLoader.loadClass(packageName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Error while loading class: " + packageName, e);
+        }
+    }
+    public Class<?> toClass(ClassNode classNode) {
+        System.out.println(classNode.parse());
+        return toClass(classNode.getPackageName()+"."+classNode.getName(), classNode.parse());
+    }
+
+    @Override
+    public <T> T toObject(String expression) {
+        ClassNode classNode = new ClassNode("ToObject", "org.mrusername.ion", AccessModifier.PUBLIC, "", null, null);
+        classNode.getFields().put("value",new FieldNode("value", AccessModifier.PUBLIC, true, true, Object.class.getName(), expression));
+        Class<?> clazz = toClass(classNode);
+        try {
+            return JavaUtil.getField(JavaUtil.newInstance(clazz), "value", true);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating object from expression: " + expression, e);
+        }
+    }
+
+}
